@@ -459,7 +459,7 @@ Eigen::Vector3d ToVector(double phi, double theta) {
 }
 
 void ToSphericalCoords(const Eigen::Vector3d& dir, double* phi, double* theta) {
-  CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit");
+  // CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit");
   // Explicitly clamp the z coordinate so that numeric errors don't cause it
   // to fall just outside of acos' domain.
   *theta = acos(Clamp(dir.z(), -1.0, 1.0));
@@ -501,8 +501,8 @@ Eigen::Vector2d ToImageCoords(double phi, double theta, int width, int height) {
 }
 
 double EvalSHSlow(int l, int m, double phi, double theta) {
-  CHECK(l >= 0, "l must be at least 0.");
-  CHECK(-l <= m && m <= l, "m must be between -l and l.");
+  // CHECK(l >= 0, "l must be at least 0.");
+  // CHECK(-l <= m && m <= l, "m must be between -l and l.");
 
   double kml = sqrt((2.0 * l + 1) * Factorial(l - abs(m)) /
                     (4.0 * M_PI * Factorial(l + abs(m))));
@@ -538,9 +538,9 @@ double EvalSH(int l, int m, const Eigen::Vector3d& dir) {
   if (l <= kHardCodedOrderLimit) {
     // Validate l and m here (don't do it generally since EvalSHSlow also
     // checks it if we delegate to that function).
-    CHECK(l >= 0, "l must be at least 0.");
-    CHECK(-l <= m && m <= l, "m must be between -l and l.");
-    CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit.");
+    // CHECK(l >= 0, "l must be at least 0.");
+    // CHECK(-l <= m && m <= l, "m must be between -l and l.");
+    // CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit.");
 
     switch (l) {
       case 0:
@@ -618,8 +618,8 @@ double EvalSH(int l, int m, const Eigen::Vector3d& dir) {
 
 std::unique_ptr<std::vector<double>> ProjectFunction(
     int order, const SphericalFunction& func, int sample_count) {
-  CHECK(order >= 0, "Order must be at least zero.");
-  CHECK(sample_count > 0, "Sample count must be at least one.");
+  // CHECK(order >= 0, "Order must be at least zero.");
+  // CHECK(sample_count > 0, "Sample count must be at least one.");
 
   // This is the approach demonstrated in [1] and is useful for arbitrary
   // functions on the sphere that are represented analytically.
@@ -666,7 +666,7 @@ std::unique_ptr<std::vector<double>> ProjectFunction(
 
 std::unique_ptr<std::vector<Eigen::Array3f>> ProjectEnvironment(
     int order, const Image& env) {
-  CHECK(order >= 0, "Order must be at least zero.");
+  // CHECK(order >= 0, "Order must be at least zero.");
 
   // An environment map projection is three different spherical functions, one
   // for each color channel. The projection integrals are estimated by
@@ -705,9 +705,9 @@ std::unique_ptr<std::vector<Eigen::Array3f>> ProjectEnvironment(
 std::unique_ptr<std::vector<double>> ProjectSparseSamples(
     int order, const std::vector<Eigen::Vector3d>& dirs,
     const std::vector<double>& values) {
-  CHECK(order >= 0, "Order must be at least zero.");
-  CHECK(dirs.size() == values.size(),
-      "Directions and values must have the same size.");
+  // CHECK(order >= 0, "Order must be at least zero.");
+  // CHECK(dirs.size() == values.size(),
+  //     "Directions and values must have the same size.");
 
   // Solve a linear least squares system Ax = b for the coefficients, x.
   // Each row in the matrix A are the values of the spherical harmonic basis
@@ -750,8 +750,8 @@ T EvalSHSum(int order, const std::vector<T>& coeffs, double phi, double theta) {
     return EvalSHSum(order, coeffs, ToVector(phi, theta));
   }
 
-  CHECK(GetCoefficientCount(order) == coeffs.size(),
-      "Incorrect number of coefficients provided.");
+  // CHECK(GetCoefficientCount(order) == coeffs.size(),
+  //     "Incorrect number of coefficients provided.");
   T sum = Zero<T>();
   for (int l = 0; l <= order; l++) {
     for (int m = -l; m <= l; m++) {
@@ -771,9 +771,9 @@ T EvalSHSum(int order, const std::vector<T>& coeffs,
     return EvalSHSum(order, coeffs, phi, theta);
   }
 
-  CHECK(GetCoefficientCount(order) == coeffs.size(),
-        "Incorrect number of coefficients provided.");
-  CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit.");
+  // CHECK(GetCoefficientCount(order) == coeffs.size(),
+  //       "Incorrect number of coefficients provided.");
+  // CHECK(NearByMargin(dir.squaredNorm(), 1.0), "dir is not unit.");
 
   T sum = Zero<T>();
   for (int l = 0; l <= order; l++) {
@@ -791,9 +791,9 @@ Rotation::Rotation(int order, const Eigen::Quaterniond& rotation)
 
 std::unique_ptr<Rotation> Rotation::Create(
     int order, const Eigen::Quaterniond& rotation) {
-  CHECK(order >= 0, "Order must be at least 0.");
-  CHECK(NearByMargin(rotation.squaredNorm(), 1.0),
-        "Rotation must be normalized.");
+  // CHECK(order >= 0, "Order must be at least 0.");
+  // CHECK(NearByMargin(rotation.squaredNorm(), 1.0),
+  //       "Rotation must be normalized.");
 
   std::unique_ptr<Rotation> sh_rot(new Rotation(order, rotation));
 
@@ -831,7 +831,7 @@ std::unique_ptr<Rotation> Rotation::Create(
 
 std::unique_ptr<Rotation> Rotation::Create(int order,
                                            const Rotation& rotation) {
-  CHECK(order >= 0, "Order must be at least 0.");
+  // CHECK(order >= 0, "Order must be at least 0.");
 
   std::unique_ptr<Rotation> sh_rot(new Rotation(order, rotation.rotation_));
 
@@ -861,8 +861,8 @@ const Eigen::MatrixXd& Rotation::band_rotation(int l) const {
 template <typename T>
 void Rotation::Apply(const std::vector<T>& coeff,
                      std::vector<T>* result) const {
-  CHECK(coeff.size() == GetCoefficientCount(order_),
-        "Incorrect number of coefficients provided.");
+  // CHECK(coeff.size() == GetCoefficientCount(order_),
+  //       "Incorrect number of coefficients provided.");
 
   // Resize to the required number of coefficients.
   // If result is already the same size as coeff, there's no need to zero out
