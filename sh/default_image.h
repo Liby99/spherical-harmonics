@@ -16,14 +16,14 @@
 #ifndef SH_DEFAULT_IMAGE_H
 #define SH_DEFAULT_IMAGE_H
 
-#include "sh/image.h"
+#include "image.h"
 
 namespace sh {
 
 class DefaultImage : public Image {
  public:
   DefaultImage(int width, int height);
-  
+
   int width() const override;
   int height() const override;
 

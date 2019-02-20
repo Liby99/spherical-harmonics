@@ -41,7 +41,7 @@
 #include <functional>
 #include <memory>
 
-#include "sh/image.h"
+#include "image.h"
 
 namespace sh {
 
@@ -170,7 +170,7 @@ T EvalSHSum(int order, const std::vector<T>& coeffs, double phi, double theta);
 // As EvalSHSum, but inputting a direction vector instead of spherical coords.
 // Check will fail if @dir is not unit.
 template <typename T>
-T EvalSHSum(int order, const std::vector<T>& coeffs, 
+T EvalSHSum(int order, const std::vector<T>& coeffs,
             const Eigen::Vector3d& dir);
 
 // Render into @diffuse_out the diffuse irradiance for every normal vector
@@ -179,7 +179,7 @@ T EvalSHSum(int order, const std::vector<T>& coeffs,
 // specified in ImageX/YToPhi/Theta. They may be of different
 // resolutions. The resolution of @diffuse_out must be set before invoking this
 // function.
-void RenderDiffuseIrradianceMap(const Image& env_map, 
+void RenderDiffuseIrradianceMap(const Image& env_map,
                                 Image* diffuse_out);
 
 // Render into @diffuse_out diffuse irradiance for every normal vector
@@ -200,7 +200,7 @@ void RenderDiffuseIrradianceMap(const std::vector<Eigen::Array3f>& sh_coeffs,
 // empty coefficient array (e.g. when the environment is assumed to be black and
 // not provided in calibration) will evaluate to 0 irradiance.
 Eigen::Array3f RenderDiffuseIrradiance(
-    const std::vector<Eigen::Array3f>& sh_coeffs, 
+    const std::vector<Eigen::Array3f>& sh_coeffs,
     const Eigen::Vector3d& normal);
 
 class Rotation {
